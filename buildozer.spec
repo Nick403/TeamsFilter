@@ -1,5 +1,6 @@
 [app]
 title = Teams Filter
+version=1.0
 package.name = teamsfilter
 package.domain = org.example
 source.dir = .
