@@ -1,7 +1,5 @@
 name: Build Teams Filter APK
-on:
-  workflow_dispatch:
- 
+on: workflow_dispatch
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,7 +10,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10.18'
+          python-version: "3.10"
       
       - name: Install system dependencies
         run: |
@@ -23,16 +21,33 @@ jobs:
       
       - name: Set up Android SDK
         run: |
+          # Create Android SDK directory
           mkdir -p ~/android-sdk/cmdline-tools
+          
+          # Download and extract command line tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O cmdline-tools.zip
           unzip cmdline-tools.zip -d ~/android-sdk/cmdline-tools
           mv ~/android-sdk/cmdline-tools/cmdline-tools ~/android-sdk/cmdline-tools/latest
+          
+          # Set environment variables
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "$HOME/android-sdk/cmdline-tools/latest/bin:$PATH" >> $GITHUB_PATH
+          echo "PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH" >> $GITHUB_ENV
+          
+          # Accept licenses and install components
           yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
           ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;36.0.0" "platforms;android-36"
+          
+          # Add build-tools to PATH
+          echo "PATH=$HOME/android-sdk/build-tools/36.0.0:$PATH" >> $GITHUB_ENV
       
-      - name: Install Buildozer and Cython
+      - name: Verify Android tools installation
+        run: |
+          echo "Installed Android tools:"
+          ls -la $ANDROID_SDK_ROOT/build-tools/36.0.0/aidl
+          which aidl
+          aidl --version
+      
+      - name: Install Buildozer and dependencies
         run: |
           pip install --upgrade cython virtualenv buildozer
       
