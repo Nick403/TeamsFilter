@@ -31,29 +31,31 @@ jobs:
           
           # Set environment variables
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$PATH" >> $GITHUB_ENV
+          echo "PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$HOME/android-sdk/platform-tools:$HOME/android-sdk/build-tools/34.0.0:$PATH" >> $GITHUB_ENV
           
           # Accept licenses and install components
           yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-          ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;36.0.0" "platforms;android-36"
-          
-          # Add build-tools to PATH
-          echo "PATH=$HOME/android-sdk/build-tools/36.0.0:$PATH" >> $GITHUB_ENV
+          ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;34.0.0" "platforms;android-34"
       
       - name: Verify Android tools installation
         run: |
-          echo "Installed Android tools:"
-          ls -la $ANDROID_SDK_ROOT/build-tools/36.0.0/aidl
-          which aidl
-          aidl --version
+          echo "Android SDK components:"
+          ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --list_installed
+          echo "AIDL version:"
+          $ANDROID_SDK_ROOT/build-tools/34.0.0/aidl --version
       
       - name: Install Buildozer and dependencies
         run: |
           pip install --upgrade cython virtualenv buildozer
       
+      - name: Clean previous builds
+        run: |
+          buildozer android clean
+          rm -rf .buildozer
+      
       - name: Build APK
         run: |
-          buildozer android debug
+          buildozer -v android debug
       
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
