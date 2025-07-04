@@ -27,16 +27,6 @@ jobs:
         run: |
           pip install --upgrade cython virtualenv buildozer
 
-      - name: Dummy Build to prepare SDK
-        run: |
-          buildozer android debug --dry-run || true
-
-      - name: Accept Android SDK licenses and install components
-        run: |
-          yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager \
-            --sdk_root=${HOME}/.buildozer/android/platform/android-sdk \
-            "platforms;android-33" "platform-tools" "build-tools;36.0.0" "cmdline-tools;latest"
-
       - name: Build APK
         run: |
           buildozer android debug
