@@ -1,25 +1,25 @@
 [app]
-title = Teams Filter
+title = TeamsFilter
 package.name = teamsfilter
-package.domain = org.nick403
+package.domain = org.nick
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
-version = 0.1
+version = 1.0
 requirements = python3,kivy
 orientation = portrait
-android.api = 34
-android.ndk = 25b
-android.build_tools_version = 34.0.0
-
-# Permissions
-android.permissions = BIND_NOTIFICATION_LISTENER_SERVICE,MODIFY_AUDIO_SETTINGS,FOREGROUND_SERVICE,INTERNET
-
-# Add extra manifest chunk for the notification listener service
-android.add_manifest_xml = ./android_manifest_snippets.xml
-
-# Use service python file for background listener
-android.services = filter_service:TeamsFilterService
+osx.kivy_version = 2.1.0
+fullscreen = 1
 
 [buildozer]
 log_level = 2
 warn_on_root = 1
+
+[android]
+android.api = 34
+android.sdk = 34
+android.ndk = 25b
+android.ndk_path = 
+android.sdk_path = 
+android.ndk_api = 21
+android.build_tools_version = 34.0.0
+android.arch = armeabi-v7a
