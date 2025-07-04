@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,16 +27,15 @@ jobs:
         run: |
           pip install --upgrade cython virtualenv buildozer
 
-      - name: Accept Android SDK licenses
+      - name: Trigger SDK download
         run: |
-          yes | buildozer android accept_license
+          buildozer android clean
 
-      - name: Pre-install Android Build Tools
+      - name: Accept Android SDK licenses and install components
         run: |
-          mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
-          buildozer android update
           yes | ~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager \
-            "build-tools;36.0.0" "platforms;android-33" "platform-tools" "cmdline-tools;latest"
+            --sdk_root=${HOME}/.buildozer/android/platform/android-sdk \
+            "platforms;android-33" "platform-tools" "build-tools;36.0.0" "cmdline-tools;latest"
 
       - name: Build APK
         run: |
