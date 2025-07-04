@@ -20,16 +20,16 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y zip unzip openjdk-17-jdk python3-pip \
-            libffi-dev libssl-dev libncurses-dev libsqlite3-dev \
-            libbz2-dev libreadline-dev build-essential git
+            libffi-dev libssl-dev libsqlite3-dev libbz2-dev \
+            libreadline-dev build-essential git
 
       - name: Install Buildozer and Cython
         run: |
           pip install --upgrade cython virtualenv buildozer
 
-      - name: Trigger SDK download
+      - name: Dummy Build to prepare SDK
         run: |
-          buildozer android clean
+          buildozer android debug --dry-run || true
 
       - name: Accept Android SDK licenses and install components
         run: |
